@@ -14,6 +14,7 @@
 
       <section class="video-stage" aria-label="Video art player">
         <div class="laptop-player" id="laptop-player">
+          <!-- The video is placed inside the laptop screen -->
           <div class="laptop-screen">
             <video id="video-player" preload="metadata" playsinline>
               <source
@@ -22,6 +23,7 @@
             </video>
           </div>
 
+          <!-- These images form the laptop frame and the temporary button feedback layer -->
           <img
             class="laptop-art"
             id="laptop-art"
@@ -29,6 +31,7 @@
             alt="Hand-drawn open laptop">
           <img class="feedback-art" id="feedback-art" alt="">
 
+          <!-- Transparent buttons are positioned over the matching keys in the illustration -->
           <div class="laptop-controls" aria-label="Laptop media controls">
             <button class="laptop-key key-rewind" type="button" data-action="rewind" aria-label="Rewind 10 seconds"></button>
             <button class="laptop-key key-play-pause" type="button" data-action="play-pause" aria-label="Play or pause"></button>
@@ -41,6 +44,7 @@
 
         </div>
 
+        <!-- Mobile users swipe the laptop; desktop users click the OPEN or CLOSE control. -->
         <p class="swipe-hint" id="swipe-hint">Swipe down to close</p>
         <button class="laptop-toggle" id="laptop-toggle" type="button">CLOSE</button>
       </section>

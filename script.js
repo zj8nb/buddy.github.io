@@ -1,9 +1,12 @@
+// These elements are updated when the user controls or closes the laptop.
 const laptopPlayer = document.querySelector("#laptop-player");
 const laptopArt = document.querySelector("#laptop-art");
 const feedbackArt = document.querySelector("#feedback-art");
 const swipeHint = document.querySelector("#swipe-hint");
 const laptopToggle = document.querySelector("#laptop-toggle");
 const video = document.querySelector("#video-player");
+
+// Separate audio files provide key feedback and the laptop closing sound.
 const keyboardSound = new Audio("Buddy-A2/keyboard.wav");
 const laptopCloseSound = new Audio("Buddy-A2/laptop-close.m4a");
 
@@ -12,6 +15,7 @@ keyboardSound.volume = 0.45;
 laptopCloseSound.preload = "auto";
 laptopCloseSound.volume = 0.65;
 
+// Each media action is connected to its matching illustrated feedback image.
 const feedbackImages = {
   rewind: "Buddy-A2/rewind-feedback.png",
   "play-pause": "Buddy-A2/play-pause-feedback.png",
@@ -27,12 +31,14 @@ let touchStartX = 0;
 let touchStartY = 0;
 let laptopIsClosed = false;
 
+// Restarting the audio allows repeated button presses to produce immediate feedback.
 function playSound(sound) {
   sound.pause();
   sound.currentTime = 0;
   sound.play().catch(() => {});
 }
 
+// The selected feedback image appears briefly above the laptop
 function showFeedback(name) {
   const image = feedbackImages[name];
 
@@ -51,6 +57,7 @@ function showFeedback(name) {
   }, 260);
 }
 
+// Play and pause use the current state of the video.
 function togglePlayback() {
   if (video.paused) {
     video.play().catch(() => {});
@@ -59,6 +66,7 @@ function togglePlayback() {
   }
 }
 
+// Rewind and forward change the current time while staying inside the video duration.
 function skipVideo(seconds) {
   const targetTime = Math.max(video.currentTime + seconds, 0);
   video.currentTime = Number.isFinite(video.duration)
@@ -66,11 +74,13 @@ function skipVideo(seconds) {
     : targetTime;
 }
 
+// Volume changes remain between zero and one and also cancel mute.
 function changeVolume(amount) {
   video.muted = false;
   video.volume = Math.min(Math.max(video.volume + amount, 0), 1);
 }
 
+// This function connects each button name to its media behaviour.
 function runMediaAction(action) {
   if (laptopIsClosed) {
     return;
@@ -91,6 +101,7 @@ function runMediaAction(action) {
   }
 }
 
+// The closed state swaps the artwork, updates the instructions, and pauses playback.
 function setLaptopClosed(shouldClose) {
   laptopIsClosed = shouldClose;
   laptopPlayer.classList.toggle("is-closed", shouldClose);
@@ -108,6 +119,7 @@ function setLaptopClosed(shouldClose) {
   }
 }
 
+// Every illustrated laptop key triggers sound, video control, and visual feedback.
 document.querySelectorAll(".laptop-key").forEach((button) => {
   button.addEventListener("click", () => {
     const action = button.dataset.action;
@@ -118,6 +130,7 @@ document.querySelectorAll(".laptop-key").forEach((button) => {
   });
 });
 
+// The desktop OPEN and CLOSE label changes the laptop state.
 laptopToggle.addEventListener("click", () => {
   if (!laptopIsClosed) {
     playSound(laptopCloseSound);
@@ -126,6 +139,7 @@ laptopToggle.addEventListener("click", () => {
   setLaptopClosed(!laptopIsClosed);
 });
 
+// The starting touch position is stored to measure the direction of a mobile swipe.
 laptopPlayer.addEventListener(
   "touchstart",
   (event) => {
@@ -135,6 +149,7 @@ laptopPlayer.addEventListener(
   { passive: true }
 );
 
+// A vertical swipe closes the laptop downward and opens it upward.
 laptopPlayer.addEventListener(
   "touchend",
   (event) => {
@@ -154,6 +169,7 @@ laptopPlayer.addEventListener(
   { passive: true }
 );
 
+// The physical spacebar provides the same play and pause action as the drawn key.
 document.addEventListener("keydown", (event) => {
   if (event.code === "Space" && event.target === document.body) {
     event.preventDefault();
@@ -163,4 +179,5 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+// The page starts with the laptop open and ready for interaction.
 setLaptopClosed(false);
